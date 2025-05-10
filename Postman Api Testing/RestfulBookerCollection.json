@@ -1,0 +1,561 @@
+{
+	"info": {
+		"_postman_id": "4917de88-b5fd-4ac3-b78a-7bca7bcb0d03",
+		"name": "Restful booker api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44371720",
+		"_collection_link": "https://kareemyasser-1557658.postman.co/workspace/88e278cd-72de-4d6c-869d-6d27e764dfc6/collection/44197834-4917de88-b5fd-4ac3-b78a-7bca7bcb0d03?action=share&source=collection_link&creator=44371720"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "retrive rooms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verify successful response\r",
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Make sure rooms exist\r",
+									"pm.test(\"Rooms are available\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.rooms).to.be.an('array').that.is.not.empty;\r",
+									"    \r",
+									"    // Save the first room's ID for later requests\r",
+									"    if(jsonData.rooms && jsonData.rooms.length > 0) {\r",
+									"        pm.collectionVariables.set(\"roomId\", jsonData.rooms[0].roomid);\r",
+									"        console.log(\"Selected Room ID: \" + jsonData.rooms[0].roomid);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}room",
+							"host": [
+								"{{url}}room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrive specific room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Room details are valid\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('roomid');\r",
+									"    console.log(\"Expected roomId: \" + pm.collectionVariables.get(\"roomId\"));\r",
+									"    console.log(\"Actual roomId in response: \" + jsonData.roomid);\r",
+									"    pm.collectionVariables.set(\"roomId\", jsonData.roomid);\r",
+									"    console.log(\"Room price: \" + jsonData.roomPrice);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}room/1",
+							"host": [
+								"{{url}}room"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "book room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"roomid\": 133,\r\n  \"firstname\": \"Yara\",\r\n  \"lastname\": \"Ahmed\",\r\n  \"depositpaid\": false,\r\n  \"bookingdates\": {\r\n    \"checkin\": \"2025-05-07\",\r\n    \"checkout\": \"2025-05-11\"\r\n  },\r\n  \"email\": \"yara@example.com\",\r\n  \"phone\": \"010223456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}booking",
+							"host": [
+								"{{url}}booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send a message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Yara\",\r\n  \"email\": \"user@example.com\",\r\n  \"phone\": \"01023456789\",\r\n  \"subject\": \"Booking a room\",\r\n  \"description\": \"Booking a room for me and my family\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}message",
+							"host": [
+								"{{url}}message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "availablility checking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/room?checkin=2025-05-01&checkout=2025-05-02",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"room"
+							],
+							"query": [
+								{
+									"key": "checkin",
+									"value": "2025-05-01"
+								},
+								{
+									"key": "checkout",
+									"value": "2025-05-02"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}report",
+							"host": [
+								"{{url}}report"
+							],
+							"query": [
+								{
+									"key": "Cookie",
+									"value": "token=iei2Kw8LeEJxcyLo",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Branding",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}branding",
+							"host": [
+								"{{url}}branding"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}message",
+							"host": [
+								"{{url}}message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read specific message",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}message/1",
+							"host": [
+								"{{url}}message"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}message/2",
+							"host": [
+								"{{url}}message"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Review specific room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}room/2",
+							"host": [
+								"{{url}}room"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update room",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"roomid\": 2,\r\n  \"roomName\": \"101\",\r\n  \"type\": \"Double\",\r\n  \"accessible\": \"false\",\r\n  \"image\": \"/images/room1.jpg\",\r\n  \"description\": \"We changed the description\",\r\n  \"features\": [\r\n    \"WiFi\",\r\n    \"TV\",\r\n    \"Safe\"\r\n  ],\r\n  \"roomPrice\": \"988\",\r\n  \"featuresObject\": {\r\n    \"WiFi\": true,\r\n    \"TV\": true,\r\n    \"Radio\": false,\r\n    \"Refreshments\": false,\r\n    \"Safe\": true,\r\n    \"Views\": false\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}room/2",
+							"host": [
+								"{{url}}room"
+							],
+							"path": [
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bookingid\": 3,\r\n  \"roomid\": 103,\r\n  \"firstname\": \"Hadia\",\r\n  \"lastname\": \"Ghaleb\",\r\n  \"depositpaid\": true,\r\n  \"bookingdates\": {\r\n    \"checkin\": \"2026-03-01\",\r\n    \"checkout\": \"2026-03-05\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}booking/3",
+							"host": [
+								"{{url}}booking"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create room",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"roomName\": \"236\",\r\n  \"type\": \"Family\",\r\n  \"accessible\": false,\r\n  \"description\": \"Please enter a description for this room\",\r\n  \"image\": \"https://www.mwtestconsultancy.co.uk/img/room1.jpg\",\r\n  \"roomPrice\": \"999\",\r\n  \"features\": [\r\n    \"WiFi\",\r\n    \"TV\",\r\n    \"Refreshments\",\r\n    \"Safe\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}room",
+							"host": [
+								"{{url}}room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Booking",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//   \"bookingid\": 4,\r\n//   \"roomid\": 2,\r\n//   \"firstname\": \"Kareem\",\r\n//   \"lastname\": \"Yasserr\",\r\n//   \"depositpaid\": true,\r\n//   \"bookingdates\": {\r\n//     \"checkin\": \"2025-04-25\",\r\n//     \"checkout\": \"2025-04-30\"\r\n//   }\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}booking/3",
+							"host": [
+								"{{url}}booking"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Room",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=VygxG5SYHr6EB8WV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}room/1",
+							"host": [
+								"{{url}}room"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authentication",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "Bearer iei2Kw8LeEJxcyLo",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "roomId",
+			"value": ""
+		}
+	]
+}

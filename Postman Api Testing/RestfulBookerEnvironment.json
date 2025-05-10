@@ -1,0 +1,21 @@
+{
+	"id": "500298e5-43c0-4354-985b-2859ff70a96a",
+	"name": "URL_Test",
+	"values": [
+		{
+			"key": "url",
+			"value": "https://automationintesting.online/api/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-05-10T16:05:20.669Z",
+	"_postman_exported_using": "Postman/11.44.6-250509-0720"
+}
